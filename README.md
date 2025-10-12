@@ -7,6 +7,13 @@ Python Version: 3.12
 PyTorch Version: 2.5.0  
 CUDA Version: 12.4
 
-## Useage
+## Description & Useage
 
 ### Install
+You can use pip
+
+### Datasets Collection
+
+### Data Preprocess
+
+### Modle Training & Evaluation
