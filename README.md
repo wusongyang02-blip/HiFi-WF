@@ -10,10 +10,12 @@ CUDA Version: 12.4
 ## Description & Useage
 
 ### Install
-You can use pip
+You can use conda commands in the virtual environment provided by Anaconda to install the basic packages mentioned in the code that need to be loaded (such as numpy, os, sys, etc.), whereas pip commands do not need to be used within a conda virtual environment.
 
 ### Datasets Collection
+You can use `traffic_collection.py` to obtain traffic data. We use the **tshark** tool for automatic packet capture. And as shown in the code, we visit web pages in the order of "HomepageA-SubpageA1-HomepageB-SubpageB1". This only requires setting 2 filters, but in reality, it involves capturing mixed traffic from 4 web pages. When labeling, each piece of traffic data contains hierarchical labels of "2 main labels and 2 sub-labels".
+In the 3-tab scenario, each visit is conducted in the order of "HomepageA-SubpageA1-HomepageB-SubpageB1--HomepageC-SubpageC1". This requires setting 3 filters, and in reality, it involves mixed traffic from 6 web pages; the labels are also 3 main labels and 3 sub-labels.
 
-### Data Preprocess
+Our 
 
 ### Modle Training & Evaluation
