@@ -19,8 +19,6 @@ In the 3-tab scenario, each visit is conducted in the order of "HomepageA-Subpag
 
 Our Tor traffic data was collected using the same methodology as in the paper “Beyond Single Tabs: A Transformative Few-Shot Approach to Multi-Tab Website Fingerprinting Attacks” (published in WWW'25). The difference is that we collected traffic from the 2-tab scenario that includes subpages, as we described above.
 
-For details about the datasets, you can refer to our paper.
-
 ### Datasets Details
 Our datasets are built on 50 monitored websites (1 homepage per website, 10 subpages per website), forming 500 unique **"homepage-subpage pairs"** (e.g., "Homepage A + Subpage A1", "Homepage B + Subpage B1").   This yields 50 main labels (one per website) and 500 sub-labels (one per pair).  Thus, Sub-labels are much sparser compared to main labels(most sub-labels are 0 for any sample).
 
