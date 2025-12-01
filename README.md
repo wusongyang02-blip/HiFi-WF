@@ -13,11 +13,13 @@ CUDA Version: 12.4
 You can use conda commands in the virtual environment provided by Anaconda to install the basic packages mentioned in the code that need to be loaded (such as numpy, os, sys, etc.), whereas pip commands do not need to be used within a conda virtual environment.
 
 ### Datasets Collection
-You can use `traffic_collection.py` to obtain traffic data. We use the **tshark** tool for automatic packet capture. And as shown in the code, we visit web pages in the order of "HomepageA-SubpageA1-HomepageB-SubpageB1". This only requires setting 2 filters, but in reality, it involves capturing mixed traffic from 4 web pages. When labeling, each piece of traffic data contains hierarchical labels of "2 main labels and 2 sub-labels".
+You can use traffic_collection.py to obtain traffic data. We use the tshark tool for automatic packet capture. And as shown in the code, we visit web pages in the order of "HomepageA-SubpageA1-HomepageB-SubpageB1". This only requires setting 2 filters, but in reality, it involves capturing mixed traffic from 4 web pages. When labeling, each piece of traffic data contains hierarchical labels of "2 main labels and 2 sub-labels".
 
 In the 3-tab scenario, each visit is conducted in the order of "HomepageA-SubpageA1-HomepageB-SubpageB1--HomepageC-SubpageC1". This requires setting 3 filters, and in reality, it involves mixed traffic from 6 web pages; the labels are also 3 main labels and 3 sub-labels.
 
 Our Tor traffic data was collected using the same methodology as in the paper “Beyond Single Tabs: A Transformative Few-Shot Approach to Multi-Tab Website Fingerprinting Attacks” (published in WWW'25). The difference is that we collected traffic from the 2-tab scenario that includes subpages, as we described above.
+
+For details about the datasets, you can refer to our paper.
 
 ### Datasets Details
 Our datasets are built on 50 monitored websites (1 homepage per website, 10 subpages per website), forming 500 unique **"homepage-subpage pairs"** (e.g., "Homepage A + Subpage A1", "Homepage B + Subpage B1").   This yields 50 main labels (one per website) and 500 sub-labels (one per pair).  Thus, Sub-labels are much sparser compared to main labels(most sub-labels are 0 for any sample).
