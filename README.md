@@ -26,17 +26,17 @@ Our datasets are built on 50 monitored websites (1 homepage per website, 10 subp
 
 Each 2-tab browsing sequence is structured as: [Homepage-Subpage Pair 1] → [Homepage-Subpage Pair 2], where Pair 1 and Pair 2 belong to different websites (no overlapping main labels).   We construct the two datasets as follows:
 
-SP-MA(Single-Permutation, Multi-Access) Datasets: 
+**SP-MA(Single-Permutation, Multi-Access) Datasets:** 
 
 We perform random sampling, assigning each of the 500 pairs as Pair 1, and matching each **Pair 1** with a **Pair 2** from a different website (i.e., with a distinct main label).  This way, we obtain 500 unique 2-tab sequences.  Each sequence is accessed repeatedly 20 times, generating 10,000 traffic samples—which constitutes the SP-MA dataset for the 2-tab scenario.  
 
 If we further randomly sample a **Pair 3** that has distinct main labels from both **Pair 1** and **Pair 2**, and perform accesses following the sequence [Homepage-Subpage Pair 1] → [Homepage-Subpage Pair 2] → [Homepage-Subpage Pair 3], this is the construction method of the SP-MA dataset for the 3-tab scenario.
 
-MP-SA(Multi-Permutation, Single-Access) Datasets: 
+**MP-SA(Multi-Permutation, Single-Access) Datasets:**
 
 We repeat the process used to generate the 500 unique 2-tab sequences in the SP-MA dataset 20 times, which allows us to obtain nearly non-repetitive 2-tab sequences totaling 10,000. Each sequence is accessed once, resulting in the MP-SA dataset for the 2-tab scenario. This dataset is specifically designed to evaluate the model's capability against multi-tab WF attacks involving mixed subpage traffic, in scenarios where subpages are not identified.
 
-Open-World Dataset: 
+**Open-World Dataset:**
 
 We selected 12,000 websites that are not included in our monitored website list. We then generated 12,000 unique access sequences following the same access sequence generation method, but at the 4-tab level—for instance, sequences in the form of **"Website A → Website B → Website C → Website D"**—and these sequences are also generated through random sampling. Furthermore, when visiting these websites, we randomly open some of their subpages, while others are not. This design increases traffic complexity and better aligns with users' real-world browsing behaviors.
 
