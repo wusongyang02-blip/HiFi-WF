@@ -215,7 +215,7 @@ def main():
         return total_loss/len(train_loader), main_recall
 
     # 4. Evaluation function
-    def evaluate(loader, set_name="Test set"):
+    def evaluate(loader, set_name="Test set", fixed_threshold=None):
         model.eval()
         main_targets = []
         main_outputs = []
@@ -239,7 +239,7 @@ def main():
         sample_main_probs = np.max(main_probs, axis=1)
 
         # Dynamically find optimal threshold for current training set
-        optimal_th_main = find_optimal_threshold_by_f1(main_targets, sample_main_probs)
+        optimal_th_main = find_optimal_threshold_by_f1(main_targets, sample_main_probs) if fixed_threshold is None else fixed_threshold
         
         # Generate predictions using optimal threshold
         main_preds = (sample_main_probs > optimal_th_main).astype(int)
@@ -274,6 +274,8 @@ def main():
     best_f1 = 0
     best_model_state = None
     
+    fixed_th_main = None
+    
     for epoch in range(80): 
         train_loss, train_recall = train_one_epoch(epoch)
         
@@ -281,6 +283,8 @@ def main():
             torch.save(model.state_dict(), f'model_epoch{epoch+1}.pth')
             print(f"\nValidation set evaluation (Epoch {epoch+1}):")
             val_results = evaluate(val_loader, "Validation set")
+            
+            fixed_th_main = val_results['main']['optimal_th']
             
             if val_results['main']['f1'] > best_f1:
                 best_f1 = val_results['main']['f1']
@@ -291,7 +295,7 @@ def main():
     print("\nTraining completed, starting testing...")
     if best_model_state is not None:
         model.load_state_dict(best_model_state)
-    test_results = evaluate(test_loader, "Test set")
+    test_results = evaluate(test_loader, "Test set", fixed_threshold=fixed_th_main)
     torch.save(model.state_dict(), 'model_final.pth')
 
 if __name__ == "__main__":
