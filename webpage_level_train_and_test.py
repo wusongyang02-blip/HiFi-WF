@@ -252,7 +252,7 @@ def main():
         return total_loss/len(train_loader), main_recall, sub_recall
 
     # 4. Evaluation function
-    def evaluate(loader, set_name="Test set"):
+    def evaluate(loader, set_name="Test set", fixed_thresholds=None):
         model.eval()
         main_targets = []
         main_outputs = []
@@ -279,7 +279,19 @@ def main():
         
         # Max-pooling for probability fusion is adopted
         main_probs_fused = np.max(main_probs, axis=1)  # [N,C]
-        optimal_th_main = find_optimal_threshold_by_f1(main_targets, main_probs_fused)
+        sub_targets = np.concatenate(sub_targets)
+        sub_outputs = np.concatenate(sub_outputs)
+        sub_probs = expit(sub_outputs)  # [N,2,C]
+
+        # Max-pooling for probability fusion is adopted
+        sub_probs_fused = np.max(sub_probs, axis=1)  # [N,C]
+
+        if fixed_thresholds is None:
+            optimal_th_main = find_optimal_threshold_by_f1(main_targets, main_probs_fused)
+            optimal_th_sub = find_optimal_threshold_by_f1(sub_targets, sub_probs_fused)
+        else:
+            optimal_th_main, optimal_th_sub = fixed_thresholds
+
         main_preds = (main_probs_fused > optimal_th_main).astype(int)  # [N,C]
         
         main_precision = precision_score(main_targets, main_preds, average='micro', zero_division=0)
@@ -288,13 +300,6 @@ def main():
         main_p_at_k = calculate_pak(main_targets, main_probs_fused, k= )          # Set k as per scenario (see Table 2 in the paper)
         main_map_at_k = calculate_mapk(main_targets, main_probs_fused, k= )       # Set k as per scenario (see Table 2 in the paper)
         
-        sub_targets = np.concatenate(sub_targets)
-        sub_outputs = np.concatenate(sub_outputs)
-        sub_probs = expit(sub_outputs)  # [N,2,C]
-
-        # Max-pooling for probability fusion is adopted
-        sub_probs_fused = np.max(sub_probs, axis=1)  # [N,C]
-        optimal_th_sub = find_optimal_threshold_by_f1(sub_targets, sub_probs_fused)
         sub_preds = (sub_probs_fused > optimal_th_sub).astype(int)  # [N,C]
         
         sub_precision = precision_score(sub_targets, sub_preds, average='micro', zero_division=0)
@@ -338,6 +343,8 @@ def main():
     print("\nStarting training...")
     best_f1 = 0
     best_model_state = None
+    fixed_th_main = None
+    fixed_th_sub = None
     
     for epoch in range():  # Input the number of epochs
         train_one_epoch(epoch)
@@ -354,6 +361,9 @@ def main():
             print(f"\nValidation set evaluation (Epoch {epoch+1}):")
             val_results = evaluate(val_loader, "Validation set")
             
+            fixed_th_main = val_results['main']['optimal_th']
+            fixed_th_sub = val_results['sub']['optimal_th']
+            
             # Save the model with the highest F1 score of homepages or subpages
             if val_results['main']['f1'] > best_f1:
                best_f1 = val_results['main']['f1']
@@ -362,7 +372,7 @@ def main():
     
     print("\nTraining completed, starting testing...")
     model.load_state_dict(torch.load('model_best_f1.pth'))  # Load the best model
-    test_results = evaluate(test_loader, "Test set")
+    test_results = evaluate(test_loader, "Test set", fixed_thresholds=(fixed_th_main, fixed_th_sub))
     torch.save(model.state_dict(), 'model_final.pth')
 
 if __name__ == "__main__":
